@@ -296,7 +296,7 @@ void ra()
 void vao()
 {
     int Id;
-
+    Barriervao b;
     dstheravao.push_back(theravao());
     ParkingTicket parkingticket;
     /* A loop that iterates through the vector of theravao. */
@@ -311,6 +311,7 @@ void vao()
     }
     if (logs.size() < maxSize) {
     logs.push_back(Logs(parkingticket, currentDateTime()));
+    b.in();
     cout << "Xac nhan xe di vao.\n";
     }
     else
