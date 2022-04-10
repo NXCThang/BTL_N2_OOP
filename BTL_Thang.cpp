@@ -4,12 +4,21 @@
 #include <vector>
 using namespace std;
   vector<int> ids;
+  int maxSize = 200;
+
 
 string currentDateTime()
 {
-   string buf="0";
+    time_t now = time(0);
+    struct tm tstruct;
+    char buf[80];
+    tstruct = *gmtime(&now);
+    tstruct.tm_hour += 7;
+    strftime(buf, sizeof(buf), "%Y-%m-%d.%X", &tstruct);
+
     return buf;
 }
+
 class ParkingTicket
 {
 private:
@@ -234,11 +243,12 @@ void ra()
     if (!ParkingTicket::checkID(Id, ids))
     {
         cout << "ID cua the khong ton tai. \n";
+        b.in();
     }
     else if (logs.size() > 0)
     {
         /* This is a loop that iterates through the vector of logs. */
-        for (int i = 0; i <= logs.size(); i++)
+        for (int i = 0; i < logs.size(); i++)
         {
 
             if (Id == logs[i].getID() && logs[i].getstatusthe() == false)
@@ -251,23 +261,33 @@ void ra()
 
             if (Id == logs[i].getID() && logs[i].getStatus() == false && logs[i].getstatusthe() == true && biensoxe == logs[i].getLicensenum())
             {
+
                 logs[i].diRa();
                 cout << "The da duoc mo. \n";
                 cout << "Press Enter to Continue \n";
                 cin.ignore();
                 return;
             }
-            {
-                ids.erase(ids.begin() + i);
-                logs.erase(logs.begin() + i);
-                logs[i].diRa();
+
+               /*  ids.erase(ids.begin() + i);
+                logs.erase(logs.begin() + i); */
+                if (Id == ids[i] && biensoxe == dstheravao[i].licenseNumber)
+                {
                 b.settrue();
                 b.in();
+                 logs[i].diRa();
                 cout << "Xac nhan xe di ra.\n";
                 cout << "Press Enter to Continue \n";
                 cin.ignore();
                 return;
-            }
+                }
+                else if (biensoxe != dstheravao[i].licenseNumber && i == logs.size() - 1) {
+                    cout << "Bien so xe khong dung"<<endl;
+                    b.in();
+                    cout << "Press Enter to Continue"<<endl;
+                }
+
+
         }
     }
 }
@@ -275,7 +295,7 @@ void ra()
 void vao()
 {
     int Id;
-    Barriervao b;
+
     dstheravao.push_back(theravao());
     ParkingTicket parkingticket;
     /* A loop that iterates through the vector of theravao. */
@@ -288,22 +308,27 @@ void vao()
             parkingticket = i;
         }
     }
-    b.settrue();
-    b.in();
+    if (logs.size() < maxSize) {
     logs.push_back(Logs(parkingticket, currentDateTime()));
     cout << "Xac nhan xe di vao.\n";
-
+    }
+    else
+    {
+        cout << "So luong xe da vuot qua gioi han. \n";
+    }
     cout << "Press Enter to Continue \n";
+
     cin.ignore();
 }
 
 void danhsach()
 {
     cout << "ID ve xe\t\\Bien so xe\t\tGio vao\t\t\t\t\t\t\\Gio ra\n";
-    for (Logs i : logs)
+    for (int i = 0; i < logs.size(); i++)
     {
-        cout << i.getID() << "\t\t" << i.getLicensenum() << "\t\t\t" << i.getTimeVao() << "\t\t\t" << i.getTimeRa() << endl;
+        cout << ids[i] << "\t\t" << dstheravao[i].licenseNumber << "\t\t" << logs[i].getTimeVao() << "\t\t\t\t\t\t" << logs[i].getTimeRa() << endl;
     }
+
     cout << "Press Enter to Continue";
     cin.ignore();
 }
@@ -346,7 +371,7 @@ public:
     int CarOut = 0;
     int remainingCar = 0;
     //ham kiem tra so xe con lai trong bai
-    void checkRemain(vector<theravao> dstheravao)
+    void checkRemain()
     {
         remainingCar = carIn - CarOut;
     };
@@ -392,7 +417,7 @@ int main()
             IRT.carIn++;
             break;
         case 5:
-            IRT.checkRemain(dstheravao);
+            IRT.checkRemain();
             IRT.statusReport();
             break;
         case 6:
