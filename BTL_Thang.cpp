@@ -226,6 +226,7 @@ class Barrierra: public Barrier{ // Barrier ra ke thua Barrier
         else cout<<"Barrier lan ra dang dong!\n";
     }
 };
+
 vector<Logs> logs;
 // ham xac nhan xe di ra
 void ra()
