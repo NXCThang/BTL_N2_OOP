@@ -382,12 +382,11 @@ void ra()
 {
     Barrierra b;
     string biensoxe;
-    cout << "Nhap bien so xe: ";
-    cin >> biensoxe;
     string Id;
-    int tg = 0; /// bien nay de lam j?
     cout << "Nhap ID the: ";
     cin >> Id;
+    cout << "Nhap bien so xe: ";
+    cin >> biensoxe;
 
     /* This is checking if the ID of the ticket matches the ID of the ticket in the vector. */
     if (!ParkingTicket::checkID(Id, ids))
@@ -429,6 +428,7 @@ void ra()
             }
             else if (biensoxe != dstheravao[i].licenseNumber && i == logs.size() - 1) {
                     cout << "Bien so xe khong dung"<<endl;
+                    b.in();
                     cout << "Press Enter to Continue"<<endl;
             }
         }
