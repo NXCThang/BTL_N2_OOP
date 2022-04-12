@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <vector>
 #include <time.h>
+#include<iomanip>
 using namespace std;
 
 vector<string> ids;
@@ -378,7 +379,7 @@ public:
 };
 vector<Logs> logs;
 // ham xac nhan xe di ra
-void ra()
+bool ra()
 {
     Barrierra b;
     string biensoxe;
@@ -405,7 +406,6 @@ void ra()
                 cout << "The da bi khoa.\n";
                 cout << "Press Enter to Continue \n";
                 cin.ignore();
-                return;
             }
 
             if (Id == ids[i] && logs[i].getStatus() == false && logs[i].getstatusthe() == true && biensoxe == logs[i].getLicensenum())
@@ -414,17 +414,17 @@ void ra()
                 cout << "The da duoc mo. \n";
                 cout << "Press Enter to Continue \n";
                 cin.ignore();
-                return;
             }
             if (Id == ids[i] && biensoxe == dstheravao[i].licenseNumber)
             {   
-                ids.erase(ids.begin() + i);
-                logs.erase(logs.begin() + i); 
+                b.settrue();
                 logs[i].diRa();
+                b.in();
+                inHoaDon(biensoxe,Id);
                 cout << "Xac nhan xe di ra.\n";
                 cout << "Press Enter to Continue \n";
                 cin.ignore();
-                return;
+                return 1;
             }
             else if (biensoxe != dstheravao[i].licenseNumber && i == logs.size() - 1) {
                     cout << "Bien so xe khong dung"<<endl;
@@ -433,6 +433,7 @@ void ra()
             }
         }
     }
+    return 0;
 }
 // ham xac nhan xe di vao
 void vao()
@@ -463,10 +464,10 @@ void vao()
 
 void danhsach()
 {
-    cout << "ID ve xe\t\\Bien so xe\t\tGio vao\t\t\t\t\t\t\\Gio ra\n";
+    cout <<setw(10)<<  "ID ve xe" << setw(20)<< "Bien so xe" <<setw(30)<< "Gio vao" <<setw(30) <<"Gio ra\n";
     for (int i = 0; i < logs.size(); i++)
     {
-        cout << ids[i] << "\t\t" << dstheravao[i].licenseNumber << "\t\t" << logs[i].getTimeVao() << "\t\t\t\t\t\t" << logs[i].getTimeRa() << endl;
+        cout << setw(10)<< ids[i] << setw(20) << dstheravao[i].licenseNumber << setw(30) << logs[i].getTimeVao() << setw(30) << logs[i].getTimeRa() << endl;
     }
 }
 
@@ -522,7 +523,7 @@ int main()
 {
     ioReport IRT;
     int total = 0;
-    string input;
+    int input;
     while (true)
     {
         cout << "1- Xe Ra \n";
@@ -532,46 +533,53 @@ int main()
         cout << "5- Thong ke\n";
         cout << "6- Thoat\n";
         cout << "7- In Tong Doanh Thu\n";
-        cin >> input;
-        while (input != "1" && input != "2" && input != "3" && input != "4" && input != "5" && input != "6" && input != "7")
-        {
-            cout << "Nhap sai. Nhap lai: ";
-            cin >> input;
+        cout<<"Lua chon: ";
+        string t;
+        cin>>t;
+        if (isNumber(t)) input=stoi(t);
+        cin.ignore();
+        switch(input){
+            case 1:
+            {
+                if(ra()){
+                    IRT.CarOut++;
+                    IRT.remainingCar--;
+                }
+                break;
+            }
+            case 2:
+            {
+                danhsach();
+                break;
+            }
+            case 3:
+            {
+                capnhap();
+                break;
+            }
+            case 4:
+            {
+                vao();
+                IRT.carIn++;
+                break;
+            }
+            case 5:
+            {
+                IRT.checkRemain(dstheravao);
+                IRT.statusReport();
+                break;
+            }
+            case 6:{
+                return 0;
+            }
+            case 7:{
+                 cout << "Tong doanh thu: " << Revenue::getRevenue() << " dong" << endl;
+            }
+            default: 
+            {
+                cout<<"\nVui long nhap lai!!\n";
+            }
         }
-        if (input == "1")
-        {
-            ra();
-            IRT.CarOut++;
-            IRT.remainingCar--;
-        }
-        else if (input == "2")
-        {
-            danhsach();
-        }
-        else if (input == "3")
-        {
-            capnhap();
-        }
-        else if (input == "4")
-        {
-            vao();
-            IRT.carIn++;
-        }
-        else if (input == "5")
-        {
-            IRT.checkRemain(dstheravao);
-            IRT.statusReport();
-        }
-        else if (input == "6")
-        {
-            return 0;
-        }
-        else if (input == "7")
-        {
-            cout << "Tong doanh thu: " << Revenue::getRevenue() << endl
-                 << endl;
-        }
-
-        cin.ignore(1);
+        
     }
 }
